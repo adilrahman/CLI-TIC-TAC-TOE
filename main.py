@@ -1,4 +1,5 @@
 import random
+import os
 
 class TicTacToe:
     def __init__(self):
@@ -21,6 +22,7 @@ class TicTacToe:
             self.board.append(" - ")
     
     def display_board(self):
+        os.system("clear")
         if self.X:
             print(f"Player X ")
         elif self.Y:
@@ -40,11 +42,11 @@ class TicTacToe:
             print("\n")
             if self.X == True:
                 
-                player = "X"
+                player = " X "
                 self.X,self.Y = False,True
             
             else:
-                player = "Y" 
+                player = " Y " 
                 self.X,self.Y = True,False
             self.move(player) 
     
@@ -55,19 +57,20 @@ class TicTacToe:
                 exit(0)
             try:
                 move = int(move)
-            except:
-                print("Enter Move Number !")
+                move -= 1
+                self.onBoardChange(move,player)
+            except ValueError:
+                print("Enter Number !")
                 self.move(player)
-            move -= 1
-            self.onBoardChange(move,player)
 
     def isDraw(self):
         for i in self.board:
             if i  == " - ":
                 return
         self.gameOver = True
-        print("-------------DRAW-------------")
-
+        print("\n-------------DRAW-------------")
+        self.replay()
+    
     def onBoardChange(self,move,player):
         if move > 8 or move < 0 or self.board[move] != " - ":
              print("Not Possible !")
@@ -95,8 +98,22 @@ class TicTacToe:
                  else:
                     count += 1
                     if count == 3:
-                        print(f"++++++++++++++ {player} - WIN ++++++++++++++")
+                        print(f"\n++++++++++++++ {player} - WIN  ++++++++++++++")
                         self.gameOver = True
+                        self.replay()
+    def replay(self):
+        res = input("\nReplay (y/n) : ")
+        if res == 'y':
+            self.board.clear()
+            os.system("clear")
+            self.X,self.Y,self.gameOver = False,False,False
+            self.startGame()
+        elif res == 'n' :
+            exit(0)
+        else:
+            print("y = Yes \nn = No")
+            self.replay()
+        
              
         
 
