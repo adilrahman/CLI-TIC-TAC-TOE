@@ -1,133 +1,22 @@
-#!/usr/bin/python3
+#!/use/bin/python3
 
-import random
-import os
-
-class TicTacToe:
+from Game import App
+ 
+class TicTacToe(App):
     def __init__(self):
-        self.board = [] 
-        self.X = False
-        self.Y = False
-        self.gameOver = False
-        self.x_Moves = set()
-        self.y_Moves = set()
+       super().__init__() 
+       self.options ={
+                        "1) Play with computer"    : lambda : print("Not Yet"),
+                        "2) Play in same computer" : self.startGame,
+                        "3) Play with different computer" : lambda : print("Not Yet") 
+                      }
 
-    def startGame(self):
-        if(random.randint(1,10) > 5):
-            self.X = True
-        else:
-            self.Y = True
-        self.create_a_board()
-        self.display_board()
-        self.play()
-   
-    def create_a_board(self):
-        for i in range(9):
-            self.board.append(" - ")
-    
-    def display_board(self):
-        os.system("clear")
-        
-        if self.X:
-            print(f"Player X ")
-        elif self.Y:
-            print(f"Player Y")
-        else:
-            print("nothing")
-
-        print("-----------------")
-        for i in range(9):
-            if i in (3,6,9):
-                print("\n-----------------")
-            print(self.board[i], end=" | ")
-        print("\n-----------------")
-    
-    def play(self):
-        while self.gameOver != True:
-            print("\n")
-            if self.X == True:
-                
-                player = " X "
-                self.X,self.Y = False,True
-            
-            else:
-                player = " Y " 
-                self.X,self.Y = True,False
-            self.move(player) 
-    
-    def move(self,player):
-            move = str(input(f"({player}): move :- "))
-            if move == 'quit' or move == 'exit':
-                self.gameOver = True
-                exit(0)
-            try:
-                move = int(move)
-                move -= 1
-                self.onBoardChange(move,player)
-            except ValueError:
-                print("Enter Number !")
-                self.move(player)
-
-    def isDraw(self):
-        for i in self.board:
-            if i  == " - ":
-                return
-        self.gameOver = True
-        print("\n-------------DRAW-------------")
-        self.replay()
-    
-    def onBoardChange(self,move,player):
-        if move > 8 or move < 0 or self.board[move] != " - ":
-             print("Not Possible !")
-             self.move(player)
-        else:
-                if player == " X ":
-                    self.x_Moves.update({move})
-                else:
-                    self.y_Moves.update({move})
-                self.board[move] = player
-                self.display_board()
-                self.winner(player)
-                self.isDraw()     
-                
-    def winner(self,player):
-         winningCombo = [[0,1,2],
-                         [3,4,5],
-                         [6,7,8],
-                         [0,4,8],
-                         [2,4,6],
-                         [0,3,6],
-                         [1,4,7],
-                         [2,5,8]]
-
-         for i in winningCombo:
-            if player == " X ":
-                moves = self.x_Moves
-            else:
-                moves = self.y_Moves
-            if len(moves.intersection(set(i))) == 3:
-                print(f"\n++++++++++++++ {player} - WIN  ++++++++++++++")
-                self.gameOver = True
-                self.replay()
-
-    def replay(self):
-        res = input("\nReplay (y/n) : ")
-        if res == 'y':
-            self.board.clear()
-            self.x_Moves.clear()
-            self.y_Moves.clear()
-            os.system("clear")
-            self.X,self.Y,self.gameOver = False,False,False
-            self.startGame()
-        elif res == 'n' :
-            exit(0)
-        else:
-            print("y = Yes \nn = No")
-            self.replay()
-        
-             
-        
+    def appStart(self):
+        for i in self.options.keys():
+            print(i)
+        res = int(input("\n> "))
+        self.options[list(self.options.keys())[res-1]]()
 
 if __name__ == "__main__":
     t = TicTacToe()
-    t.startGame()
+    t.appStart()
