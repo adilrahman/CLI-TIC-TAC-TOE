@@ -28,7 +28,6 @@ class TicTacToe:
     def display_board(self):
         os.system("clear")
         
-        print(self.x_Moves,self.y_Moves)
         if self.X:
             print(f"Player X ")
         elif self.Y:
