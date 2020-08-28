@@ -7,6 +7,8 @@ class TicTacToe:
         self.X = False
         self.Y = False
         self.gameOver = False
+        self.x_Moves = set()
+        self.y_Moves = set()
 
     def startGame(self):
         if(random.randint(1,10) > 5):
@@ -23,6 +25,8 @@ class TicTacToe:
     
     def display_board(self):
         os.system("clear")
+        
+        print(self.x_Moves,self.y_Moves)
         if self.X:
             print(f"Player X ")
         elif self.Y:
@@ -76,6 +80,10 @@ class TicTacToe:
              print("Not Possible !")
              self.move(player)
         else:
+                if player == " X ":
+                    self.x_Moves.update({move})
+                else:
+                    self.y_Moves.update({move})
                 self.board[move] = player
                 self.display_board()
                 self.winner(player)
@@ -90,21 +98,23 @@ class TicTacToe:
                          [0,3,6],
                          [1,4,7],
                          [2,5,8]]
+
          for i in winningCombo:
-             count = 0
-             for j in i:
-                 if self.board[j] != player:
-                     break
-                 else:
-                    count += 1
-                    if count == 3:
-                        print(f"\n++++++++++++++ {player} - WIN  ++++++++++++++")
-                        self.gameOver = True
-                        self.replay()
+            if player == " X ":
+                moves = self.x_Moves
+            else:
+                moves = self.y_Moves
+            if len(moves.intersection(set(i))) == 3:
+                print(f"\n++++++++++++++ {player} - WIN  ++++++++++++++")
+                self.gameOver = True
+                self.replay()
+
     def replay(self):
         res = input("\nReplay (y/n) : ")
         if res == 'y':
             self.board.clear()
+            self.x_Moves.clear()
+            self.y_Moves.clear()
             os.system("clear")
             self.X,self.Y,self.gameOver = False,False,False
             self.startGame()
