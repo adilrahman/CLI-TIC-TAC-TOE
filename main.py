@@ -5,6 +5,7 @@ class TicTacToe:
         self.board = [] 
         self.X = False
         self.Y = False
+        self.gameOver = False
 
     def startGame(self):
         if(random.randint(1,10) > 5):
@@ -35,16 +36,69 @@ class TicTacToe:
         print("\n-----------------")
     
     def play(self):
-        while True:
+        while self.gameOver != True:
+            print("\n")
             if self.X == True:
+                
+                player = "X"
                 self.X,self.Y = False,True
-                move = str(input("move : "))
+            
             else:
+                player = "Y" 
                 self.X,self.Y = True,False
-                move = str(input("move : "))
+            self.move(player) 
+    
+    def move(self,player):
+            move = str(input(f"({player}): move :- "))
+            if move == 'quit' or move == 'exit':
+                self.gameOver = True
+                exit(0)
+            try:
+                move = int(move)
+            except:
+                print("Enter Move Number !")
+                self.move(player)
+            move -= 1
+            self.onBoardChange(move,player)
 
+    def isDraw(self):
+        for i in self.board:
+            if i  == " - ":
+                return
+        self.gameOver = True
+        print("-------------DRAW-------------")
 
-
+    def onBoardChange(self,move,player):
+        if move > 8 or move < 0 or self.board[move] != " - ":
+             print("Not Possible !")
+             self.move(player)
+        else:
+                self.board[move] = player
+                self.display_board()
+                self.winner(player)
+                self.isDraw()     
+                
+    def winner(self,player):
+         winningCombo = [[0,1,2],
+                         [3,4,5],
+                         [6,7,8],
+                         [0,4,8],
+                         [2,4,6],
+                         [0,3,6],
+                         [1,4,7],
+                         [2,5,8]]
+         for i in winningCombo:
+             count = 0
+             for j in i:
+                 if self.board[j] != player:
+                     break
+                 else:
+                    count += 1
+                    if count == 3:
+                        print(f"++++++++++++++ {player} - WIN ++++++++++++++")
+                        self.gameOver = True
+             
+        
 
 if __name__ == "__main__":
     t = TicTacToe()
